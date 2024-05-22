@@ -19,7 +19,7 @@ const App = () => {
   const [password, setPassword] = useState('') // 5a
   const [user, setUser] = useState(null) // 5a. So, by default, it's null -> login will be visible, functions for adding a new blog won't be available, "logged-in as..." won't be visible,...
 
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
   
   useEffect(() => {    
     blogService.getAll()
@@ -29,7 +29,7 @@ const App = () => {
   }, []) // without the [] as 2nd argument, it would keep rendering them FOREVER! Thanks to the [], it will only render them ONCE c:
   
   useEffect(() => {    // 5a. NB!! This has to be BEFORE the "if(!notes)..." below! Why? Dunno!
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')    
+    const loggedUserJSON = window.localStorage.getItem('loggedInBlogAppUser')    
     if (loggedUserJSON) {      
       const user = JSON.parse(loggedUserJSON)      
       setUser(user)      
@@ -41,6 +41,10 @@ const App = () => {
     return null
   }
   console.log('render', blogs.length, 'blogs')
+
+  const logoutButton = () => (
+    <button onClick={handleLogout}>logout</button>
+  )
 
   const blogForm = () => ( // NOTE!!! IT ACTUALLY RETURNS WITHIN () JUST LIKE YOU NEED IN REACT COMPONENTS!! NOT IN {}!! (if you had {}, you'd write {return (html...)})
     <form onSubmit={addBlog}>
@@ -60,27 +64,30 @@ const App = () => {
   )
 
 const loginForm = () => ( // 5a TO-DO: copy-pasted
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>      
+    <div>
+      <h3>login</h3>
+      <form onSubmit={handleLogin}>
+        <div>
+          username
+            <input
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div>
+          password
+            <input
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button type="submit">login</button>
+      </form>  
+    </div>    
   )
 
   const addBlog = (event) => {
@@ -91,11 +98,12 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
       author: newAuthor,
       url: newUrl,
       likes: 0,
+      //userId: user // TO-DO: this has to be acquired somehow! // NVM, just find by "author" -> you'll get user from there c: non problemo
       // id : blogs.length+1 // "it's better to let the server generate the new id"
     }
 
     blogService      
-    .create(blogObject)      
+    .create(blogObject)      // this should also have
     .then(blog => {        
       setBlogs(blogs.concat(blog))
       setNewTitle('')
@@ -104,6 +112,12 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
     })
   }
   
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    setUser(null)  // so, behold, no-one is logged in anymore
+    window.localStorage.removeItem('loggedInBlogAppUser') // so the browser no longer remembers the user
+  }
+
   const handleLogin = async (event) => {    // 5a
     event.preventDefault()        
     try {      
@@ -111,13 +125,14 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
         username, password
       })    
       
-      window.localStorage.setItem(       // 5a: so that even if browser is refreshed, the loggedNoteappUser stays in the local storage of the browser
-        'loggedNoteappUser', JSON.stringify(user)      
+      window.localStorage.setItem(       // 5a: so that even if browser is refreshed, the loggedInBlogAppUser stays in the local storage of the browser
+        'loggedInBlogAppUser', JSON.stringify(user)      
       )
       blogService.setToken(user.token) // so, user has property token, which will contain the token. This blogService.setToken will set the token for the blogService.create's post function to use -> in effect, authentication ok
       setUser(user)    // "The token returned with a successful login is saved to the application's state - the user's field token:"  
       setUsername('')     
       setPassword('')    
+      setErrorMessage('') // we don't wanna see previous complains, if still lingering, after finally successfully logging in
     } catch (exception) {      
       setErrorMessage('Please choose one or more: (a) learn to type, (b) jog your memory, (c) create a new account, (d) jog')      
       setTimeout(() => {        
@@ -150,22 +165,30 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
       ? loginForm()
       : <div>
           <p>logged in as <i><b>{user.name}</b></i></p>
+          { logoutButton() }
           { blogForm() }
         </div> 
       }
 
-      <ul>
-      <h2>Our current blogs</h2>
-      {palautettavat_blogit.map(blog => 
-      <div>
-        <Blog key={blog.id} blog={blog}/>
-        <LikeButton blog={blog} prelikes={blog.likes}/>
-        <DeleteButton blog={blog} blogs={blogs} setBlogs={setBlogs}/>
-      </div>
-      )}
+       {user ? 
+        <div>
+          <h2>Our current blogs</h2>
+          <ul>
+          {palautettavat_blogit.map(blog => 
+          <div>
+            <Blog key={blog.id} blog={blog}/>
+            <LikeButton blog={blog} prelikes={blog.likes}/>
+            <DeleteButton blog={blog} blogs={blogs} setBlogs={setBlogs}/>
+          </div>
+          )}
+        </ul>
+        </div>
+      : null}
+        
       
-      </ul>
       <Footer/>
+    
+    
     </div>
   )
 }
