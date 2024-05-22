@@ -102,7 +102,7 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
       author: newAuthor,
       url: newUrl,
       likes: 0,
-      //userId: user // TO-DO: this has to be acquired somehow! // NVM, just find by "author" -> you'll get user from there c: non problemo
+      
       // id : blogs.length+1 // "it's better to let the server generate the new id"
     }
 
@@ -114,10 +114,16 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
       setNewAuthor('')
       setNewUrl('')
 
-      setSuccessMessage(`a new blog "${newTitle}" by ${newAuthor} added!`)      
+      setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      
       setTimeout(() => {        
         setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
       }, 5000)
+    })
+    .catch(error => { // added this
+      setErrorMessage("please provide values for 'title' AND 'url' for the new blog (author is optional)")
+      setTimeout(() => {        
+        setErrorMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
+      }, 5000) 
     })
   }
   
@@ -190,7 +196,7 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
           <div>
             <Blog key={blog.id} blog={blog}/>
             <LikeButton blog={blog} prelikes={blog.likes}/>
-            <DeleteButton blog={blog} blogs={blogs} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
+            <DeleteButton blog={blog} blogs={blogs} user={user} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
           </div>
           )}
         </ul>

@@ -27,7 +27,10 @@ const update = async (id, newObject) => {
 }
 
 const remove = async (id) => {
-  const response = await axios.delete(`${baseUrl}/${id}`) // delete ONLY needs the url c:
+  const config = {                      // 5a own attempt
+    headers: { Authorization: token },  // 5a own attempt
+  }
+  const response = await axios.delete(`${baseUrl}/${id}`, config) // 5a own attempt: will this work?? delete needs the url AND now also the token
   console.log("blogService remove: response after axios.DELETE:", response)
   return response
 }
