@@ -4,6 +4,8 @@ import DeleteButton from "./components/DeleteButton.jsx"
 import { useState, useEffect } from 'react'
 import blogService from './services/blogs' // imports FIVE functions: setToken (for login), getAll, create, update, remove
 import Notification from './components/Notification.jsx'
+import ErrorNotification from "./components/ErrorNotification.jsx"
+import SuccessNotification from "./components/SuccessNotification.jsx"
 import Footer from './components/Footer.jsx'
 //import LoginForm from './components/LoginForm.jsx'
 //import BlogForm from './components/BlogForm.jsx'
@@ -19,7 +21,9 @@ const App = () => {
   const [password, setPassword] = useState('') // 5a
   const [user, setUser] = useState(null) // 5a. So, by default, it's null -> login will be visible, functions for adding a new blog won't be available, "logged-in as..." won't be visible,...
 
+  const [message, setMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
   
   useEffect(() => {    
     blogService.getAll()
@@ -91,7 +95,7 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
   )
 
   const addBlog = (event) => {
-    event.preventDefault()   // prevents the page from being refreshed on submit event 
+    event.preventDefault()   // prevents the page from being refreshed on submit event     
     console.log('form onSubmit button clicked', event.currentTarget)  // event.target works too: "event.target will return the element that was clicked but not necessarily the element to which the event listener has been attached."
     const blogObject = { // TO-DO: check what should be going on here!
       title: newTitle,
@@ -109,6 +113,11 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
       setNewTitle('')
       setNewAuthor('')
       setNewUrl('')
+
+      setSuccessMessage(`a new blog "${newTitle}" by ${newAuthor} added!`)      
+      setTimeout(() => {        
+        setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
+      }, 5000)
     })
   }
   
@@ -129,10 +138,10 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
         'loggedInBlogAppUser', JSON.stringify(user)      
       )
       blogService.setToken(user.token) // so, user has property token, which will contain the token. This blogService.setToken will set the token for the blogService.create's post function to use -> in effect, authentication ok
-      setUser(user)    // "The token returned with a successful login is saved to the application's state - the user's field token:"  
+      setUser(user)    // "The token returned with a successful login is saved to the application's state - the user's field token:"        
       setUsername('')     
       setPassword('')    
-      setErrorMessage('') // we don't wanna see previous complains, if still lingering, after finally successfully logging in
+      setErrorMessage(null) // we don't wanna see previous error messages, if still lingering, after finally successfully logging in
     } catch (exception) {      
       setErrorMessage('Please choose one or more: (a) learn to type, (b) jog your memory, (c) create a new account, (d) jog')      
       setTimeout(() => {        
@@ -159,7 +168,10 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
     return (
     <div>
       <h1>BlogBlob</h1>
-      <Notification message={ errorMessage } />
+      <Notification message={ message } />
+      <ErrorNotification message={ errorMessage } />
+      <SuccessNotification message={ successMessage } />
+
 
       {user === null
       ? loginForm()
@@ -178,17 +190,13 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
           <div>
             <Blog key={blog.id} blog={blog}/>
             <LikeButton blog={blog} prelikes={blog.likes}/>
-            <DeleteButton blog={blog} blogs={blogs} setBlogs={setBlogs}/>
+            <DeleteButton blog={blog} blogs={blogs} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
           </div>
           )}
         </ul>
         </div>
       : null}
-        
-      
       <Footer/>
-    
-    
     </div>
   )
 }
