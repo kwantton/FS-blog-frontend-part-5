@@ -99,11 +99,11 @@ const App = () => {
     //console.log('form onSubmit button clicked', event.currentTarget)  // event.target works too: "event.target will return the element that was clicked but not necessarily the element to which the event listener has been attached."
     blogFormRef.current.toggleVisibility()  // 5b (5.5)
     blogService
-      .create(blogObject)
+      .create(blogObject) // this will succeed if the Title and Url are provided - otherwise, error -> error message is shown c:
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        //setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      // TO-DO: korjaa!
-        setSuccessMessage(`a new blog KORJAA by KORJAA added!`)      
+        //setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      // OLD! THIS DOESN'T WORK NOW, BECAUSE APP.JSX FUNCTION DOESN'T HAVE THIS! It DOES have to have the parameter, blogObject, that's fed into it in BlogForm component, however - so using that instead DOES work! Nice! REMEMBER!
+        setSuccessMessage(`a new blog "${blogObject.title}" by "${blogObject.author}" added!`)      
         setTimeout(() => {        
         setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
       }, 5000)
