@@ -59,19 +59,20 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
         //setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      // OLD! THIS DOESN'T WORK NOW, BECAUSE APP.JSX FUNCTION DOESN'T HAVE THIS! It DOES have to have the parameter, blogObject, that's fed into it in BlogForm component, however - so using that instead DOES work! Nice! REMEMBER!
         setSuccessMessage(`a new blog "${blogObject.title}" by "${blogObject.author}" added!`)      
+        blogFormRef.current.toggleVisibility()  // 5b (5.5) - only if successful, then hide it after adding a new blog c:
+        
         setTimeout(() => {        
         setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
       }, 5000)
-      blogFormRef.current.toggleVisibility()  // 5b (5.5) - only if successful, then hide it after adding a new blog c:
-      return "success" // for emptying the field
+      
       })
       .catch(error => { // added this
         setErrorMessage("please provide values for 'title' AND 'url' for the new blog (author is optional)")
         setTimeout(() => {        
           setErrorMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
         }, 5000) 
+        
       })
-      return "failure"
   }
   
   const handleLogout = async (event) => {
