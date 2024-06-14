@@ -4,7 +4,7 @@ const ErrorNotification = ({ message }) => {
     }
   
     return (
-      <div className='error'>
+      <div className='error'> {/** for correct css shaping, className is set to 'error' */}
         {message}
       </div>
     )

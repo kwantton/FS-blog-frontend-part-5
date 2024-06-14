@@ -7,7 +7,7 @@ import Notification from './components/Notification.jsx'
 import ErrorNotification from "./components/ErrorNotification.jsx"
 import SuccessNotification from "./components/SuccessNotification.jsx"
 import Footer from './components/Footer.jsx'
-//import LoginForm from './components/LoginForm.jsx'
+import LoginForm from './components/LoginForm.jsx' // 5b
 //import BlogForm from './components/BlogForm.jsx'
 import loginService from "./services/login.js"
 
@@ -67,32 +67,32 @@ const App = () => {
     </form>
   )
 
-const loginForm = () => ( // 5a TO-DO: copy-pasted
-    <div>
-      <h3>login</h3>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>  
-    </div>    
-  )
+// const loginForm = () => ( // 5a // 5b doesn't tell you to do that, but I extracted this into LoginForm component
+//     <div>
+//       <h3>login</h3>
+//       <form onSubmit={handleLogin}>
+//         <div>
+//           username
+//             <input
+//               type="text"
+//               value={username}
+//               name="Username"
+//               onChange={({ target }) => setUsername(target.value)}
+//             />
+//         </div>
+//         <div>
+//           password
+//             <input
+//             type="password"
+//             value={password}
+//             name="Password"
+//             onChange={({ target }) => setPassword(target.value)}
+//           />
+//         </div>
+//         <button type="submit">login</button>
+//       </form>  
+//     </div>    
+//   )
 
   const addBlog = (event) => {
     event.preventDefault()   // prevents the page from being refreshed on submit event     
@@ -180,7 +180,8 @@ const loginForm = () => ( // 5a TO-DO: copy-pasted
 
 
       {user === null
-      ? loginForm()
+      // ? loginForm() // OLD (5a), 5b uses LoginForm component
+      ? <LoginForm username={username} password={password} setPassword={setPassword} setUsername={setUsername} handleLogin={handleLogin}/>
       : <div>
           <p>logged in as <i><b>{user.name}</b></i></p>
           { logoutButton() }

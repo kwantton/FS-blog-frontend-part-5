@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const loginForm = ( handleLogin ) => ( // 5a TO-DO: copy-pasted
+const loginForm = ( {username, password, handleLogin, setUsername, setPassword} ) => ( // 5a TO-DO: copy-pasted
     <form onSubmit={handleLogin}>
       <div>
         username
