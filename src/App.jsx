@@ -49,55 +49,10 @@ const App = () => {
   const logoutButton = () => (
     <button onClick={handleLogout}>logout</button>
   )
-  // this was extracted to BlogForm component c:
-  // const blogForm = () => ( // NOTE!!! IT ACTUALLY RETURNS WITHIN () JUST LIKE YOU NEED IN REACT COMPONENTS!! NOT IN {}!! (if you had {}, you'd write {return (html...)})
-  //   <form onSubmit={addBlog}>
-
-  //       <p><i>title</i></p>        
-  //       <input value={newTitle} onChange={handleTitleChange}/>
-
-  //       <p><i>author</i></p>
-  //       <input value={newAuthor} onChange={handleAuthorChange}/>
-
-  //       <p><i>url</i></p>
-  //       <input value={newUrl} onChange={handleUrlChange}/>
-
-  //       <button type="submit">save</button>
-
-  //   </form>
-  // )
-
-// const loginForm = () => ( // 5a // 5b doesn't tell you to do that, but I extracted this into LoginForm component
-//     <div>
-//       <h3>login</h3>
-//       <form onSubmit={handleLogin}>
-//         <div>
-//           username
-//             <input
-//               type="text"
-//               value={username}
-//               name="Username"
-//               onChange={({ target }) => setUsername(target.value)}
-//             />
-//         </div>
-//         <div>
-//           password
-//             <input
-//             type="password"
-//             value={password}
-//             name="Password"
-//             onChange={({ target }) => setPassword(target.value)}
-//           />
-//         </div>
-//         <button type="submit">login</button>
-//       </form>  
-//     </div>    
-//   )
 
   const addBlog = (blogObject) => {  // 5b (5.6): this is given as a prop to BlogForm
     //event.preventDefault()   // prevents the page from being refreshed on submit event     
     //console.log('form onSubmit button clicked', event.currentTarget)  // event.target works too: "event.target will return the element that was clicked but not necessarily the element to which the event listener has been attached."
-    blogFormRef.current.toggleVisibility()  // 5b (5.5)
     blogService
       .create(blogObject) // this will succeed if the Title and Url are provided - otherwise, error -> error message is shown c:
       .then(returnedBlog => {
@@ -107,6 +62,8 @@ const App = () => {
         setTimeout(() => {        
         setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
       }, 5000)
+      blogFormRef.current.toggleVisibility()  // 5b (5.5) - only if successful, then hide it after adding a new blog c:
+      return "success" // for emptying the field
       })
       .catch(error => { // added this
         setErrorMessage("please provide values for 'title' AND 'url' for the new blog (author is optional)")
@@ -114,37 +71,7 @@ const App = () => {
           setErrorMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
         }, 5000) 
       })
-
-    // pitäs olla tarpeeton
-    //   const blogObject = { // TO-DO: check what should be going on here!
-    //   title: newTitle,
-    //   author: newAuthor,
-    //   url: newUrl,
-    //   likes: 0,
-      
-    //   // id : blogs.length+1 // "it's better to let the server generate the new id"
-    // }
-
-    // entinen, josta copy-pastataan nyt
-    // blogService      
-    // .create(blogObject)      // this should also have
-    // .then(blog => {        
-    //   setBlogs(blogs.concat(blog))
-    //   setNewTitle('')
-    //   setNewAuthor('')
-    //   setNewUrl('')
-
-    //   setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      
-    //   setTimeout(() => {        
-    //     setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
-    //   }, 5000)
-    // })
-    // .catch(error => { // added this
-    //   setErrorMessage("please provide values for 'title' AND 'url' for the new blog (author is optional)")
-    //   setTimeout(() => {        
-    //     setErrorMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
-    //   }, 5000) 
-    // })
+      return "failure"
   }
   
   const handleLogout = async (event) => {
@@ -186,8 +113,7 @@ const App = () => {
       <Notification message={ message } />
       <ErrorNotification message={ errorMessage } />
       <SuccessNotification message={ successMessage } />
-
-
+      
       {user === null
       // ? loginForm() // OLD (5a), 5b uses LoginForm component
       ? <LoginForm username={username} password={password} setPassword={setPassword} setUsername={setUsername} handleLogin={handleLogin}/>

@@ -7,16 +7,21 @@ const BlogForm = ({ createBlog }) => {  // NB! the "createBlog" is a modified ve
 
     const addBlog = (event) => {
         event.preventDefault()
-        createBlog({ // mainly copy-pasted from App.jsx. So: this gives this blogObject as a parameter to the createBlog (which is the addBlog in App.jsx c:)
+        let result = ""
+
+        result = createBlog({ // mainly copy-pasted from App.jsx. So: this gives this blogObject as a parameter to the createBlog (which is the addBlog in App.jsx c:)
             title: newTitle,
             author: newAuthor,
             url: newUrl,
             likes: 0
         })
+        if (result == "success") {
+            setNewTitle('')
+            setNewAuthor('')
+            setNewUrl('')
+        }
 
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
+        
 
     }
 
