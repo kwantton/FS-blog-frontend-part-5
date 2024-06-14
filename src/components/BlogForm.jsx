@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const BlogForm = () => {
+const BlogForm = ({newTitle, newAuthor, newUrl, handleAuthorChange, handleTitleChange, handleUrlChange, addBlog}) => ( // note the ( instead of  {!! Otherwise you'd have to write "return"
     <form onSubmit={addBlog}>
 
         <p><i>title</i></p>        
@@ -15,6 +15,6 @@ const BlogForm = () => {
         <button type="submit">save</button>
 
     </form>
-}
+)
 
 export default BlogForm

@@ -7,8 +7,8 @@ import Notification from './components/Notification.jsx'
 import ErrorNotification from "./components/ErrorNotification.jsx"
 import SuccessNotification from "./components/SuccessNotification.jsx"
 import Footer from './components/Footer.jsx'
-import LoginForm from './components/LoginForm.jsx' // 5b
-//import BlogForm from './components/BlogForm.jsx'
+import LoginForm from './components/LoginForm.jsx' // 5b (EI PAKOLLINEN TEHTÄVÄ)
+import BlogForm from './components/BlogForm.jsx' // 5b: extract blogForm to BlogForm component
 import loginService from "./services/login.js"
 
 const App = () => {
@@ -185,7 +185,8 @@ const App = () => {
       : <div>
           <p>logged in as <i><b>{user.name}</b></i></p>
           { logoutButton() }
-          { blogForm() }
+          {/** { blogForm() } */} {/** OLD. 5b extracted this to BlogForm */}
+          <BlogForm newTitle={newTitle}  newAuthor={newAuthor}  newUrl={newUrl} handleAuthorChange={handleAuthorChange} handleTitleChange={handleTitleChange} handleUrlChange={handleUrlChange} addBlog={addBlog}/>
         </div> 
       }
 
