@@ -1,14 +1,19 @@
-import { useState } from 'react'
+import { useState, forwardRef, useImperativeHandle } from 'react' // 5b, 5.5 "To recap, the useImperativeHandle function is a React hook, that is used for defining functions in a component, which can be invoked from outside of the component."
 
-const Togglable = (props) => {
+const Togglable = forwardRef((props, refs) => { // 5b, 5.5 upgraded version
   const [visible, setVisible] = useState(false) // 5b, 5.5 by default, the BlogForm is not visible
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
+  
   const toggleVisibility = () => {
     setVisible(!visible)
   }
+
+  useImperativeHandle(refs, () => { // ref blogFormRef was fed here from the App.jsx. Using this, App.jsx can use toggleVisibility now c:
+    return toggleVisibility
+  })
 
   return (
     <div>
@@ -21,6 +26,6 @@ const Togglable = (props) => {
       </div>
     </div>
   )
-}
+})
 
 export default Togglable

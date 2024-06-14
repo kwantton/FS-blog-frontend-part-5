@@ -1,7 +1,7 @@
+import { useState, useEffect, useRef } from 'react' // 5b, 5.5; for accessing an extracted component's functions etc.!
 import Blog from "./components/Blog.jsx"
 import LikeButton from "./components/LikeButton.jsx"
 import DeleteButton from "./components/DeleteButton.jsx"
-import { useState, useEffect } from 'react'
 import blogService from './services/blogs' // imports FIVE functions: setToken (for login), getAll, create, update, remove
 import Notification from './components/Notification.jsx'
 import ErrorNotification from "./components/ErrorNotification.jsx"
@@ -14,9 +14,7 @@ import Togglable from "./components/Togglable.jsx"
 
 const App = () => {
   const [blogs, setBlogs] = useState(null) // HUOM! Tämä takia, huomaa rivin ~~19 "if(!blogs) {return null}" joka varmistaa, että App:in käynnistäessä ekalla kertaa palautetaan null, ja vasta kun blogs on haettu serveriltä (?), alkaa toimimaan; palautetaan null App:ista, kunnes serveriltä on saatu data. HUOM! "The method based on conditional rendering is suitable in cases where it is impossible to define the state so that the initial rendering is possible." Eli mitään oikeaa syytä initata blogs "null":iksi ei ole; paljon mieluummin inittaa []:ksi, jolloin tätä ongelmaa ei ole!! (ongelma: null:ille ei voi kutsua .map:iä. TAI, joutuisit joka kohdassa tarkistamaan ?.map jne... paskempi vaihtoehto)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState("")
+ 
   const [username, setUsername] = useState('') // 5a https://fullstackopen.com/en/part4/token_authentication#limiting-creating-new-notes-to-logged-in-users  
   const [password, setPassword] = useState('') // 5a
   const [user, setUser] = useState(null) // 5a. So, by default, it's null -> login will be visible, functions for adding a new blog won't be available, "logged-in as..." won't be visible,...
@@ -24,6 +22,7 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
+  const blogFormRef = useRef() // 5b, 5.5
   
   
   useEffect(() => {    
@@ -50,23 +49,23 @@ const App = () => {
   const logoutButton = () => (
     <button onClick={handleLogout}>logout</button>
   )
+  // this was extracted to BlogForm component c:
+  // const blogForm = () => ( // NOTE!!! IT ACTUALLY RETURNS WITHIN () JUST LIKE YOU NEED IN REACT COMPONENTS!! NOT IN {}!! (if you had {}, you'd write {return (html...)})
+  //   <form onSubmit={addBlog}>
 
-  const blogForm = () => ( // NOTE!!! IT ACTUALLY RETURNS WITHIN () JUST LIKE YOU NEED IN REACT COMPONENTS!! NOT IN {}!! (if you had {}, you'd write {return (html...)})
-    <form onSubmit={addBlog}>
+  //       <p><i>title</i></p>        
+  //       <input value={newTitle} onChange={handleTitleChange}/>
 
-        <p><i>title</i></p>        
-        <input value={newTitle} onChange={handleTitleChange}/>
+  //       <p><i>author</i></p>
+  //       <input value={newAuthor} onChange={handleAuthorChange}/>
 
-        <p><i>author</i></p>
-        <input value={newAuthor} onChange={handleAuthorChange}/>
+  //       <p><i>url</i></p>
+  //       <input value={newUrl} onChange={handleUrlChange}/>
 
-        <p><i>url</i></p>
-        <input value={newUrl} onChange={handleUrlChange}/>
+  //       <button type="submit">save</button>
 
-        <button type="submit">save</button>
-
-    </form>
-  )
+  //   </form>
+  // )
 
 // const loginForm = () => ( // 5a // 5b doesn't tell you to do that, but I extracted this into LoginForm component
 //     <div>
@@ -95,38 +94,7 @@ const App = () => {
 //     </div>    
 //   )
 
-  const addBlog = (event) => {
-    event.preventDefault()   // prevents the page from being refreshed on submit event     
-    console.log('form onSubmit button clicked', event.currentTarget)  // event.target works too: "event.target will return the element that was clicked but not necessarily the element to which the event listener has been attached."
-    const blogObject = { // TO-DO: check what should be going on here!
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-      likes: 0,
-      
-      // id : blogs.length+1 // "it's better to let the server generate the new id"
-    }
 
-    blogService      
-    .create(blogObject)      // this should also have
-    .then(blog => {        
-      setBlogs(blogs.concat(blog))
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
-
-      setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      
-      setTimeout(() => {        
-        setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
-      }, 5000)
-    })
-    .catch(error => { // added this
-      setErrorMessage("please provide values for 'title' AND 'url' for the new blog (author is optional)")
-      setTimeout(() => {        
-        setErrorMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
-      }, 5000) 
-    })
-  }
   
   const handleLogout = async (event) => {
     event.preventDefault()
@@ -156,18 +124,6 @@ const App = () => {
       }, 5000)    
     }
   }
-  const handleTitleChange = (event) => {      // this event handler is called EVERY TIME onChange of the form value (=form field!). See console.logs! This is needed to be able to change the input value of the form; otherwise it's stuck forever as "a new blog" and the console will show a React error message complaining about this c:
-    console.log(event.currentTarget.value)
-    setNewTitle(event.currentTarget.value)    // this updates the newTitle based on what the value of the form input field is
-  }
-  const handleAuthorChange = (event) => {     
-    console.log(event.currentTarget.value)
-    setNewAuthor(event.currentTarget.value)   
-  }
-  const handleUrlChange = (event) => {     
-    console.log(event.currentTarget.value)
-    setNewUrl(event.currentTarget.value)   
-  }
 
   let palautettavat_blogit = [...blogs]
     console.log("blogs:",palautettavat_blogit.length)
@@ -187,16 +143,8 @@ const App = () => {
           <p>logged in as <i><b>{user.name}</b></i></p>
           { logoutButton() }
           {/** { blogForm() } */} {/** OLD. 5b extracted this to BlogForm */}
-          <Togglable buttonLabel="create new blog">
-            <BlogForm 
-              newTitle={newTitle}  
-              newAuthor={newAuthor}  
-              newUrl={newUrl} 
-              handleAuthorChange={handleAuthorChange} 
-              handleTitleChange={handleTitleChange} 
-              handleUrlChange={handleUrlChange} 
-              addBlog={addBlog}
-            />
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}> {/** REMEMBER! */}
+            <BlogForm blogs={blogs} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
           </Togglable>
           
         </div> 
