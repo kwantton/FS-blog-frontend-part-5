@@ -10,12 +10,12 @@ import Footer from './components/Footer.jsx'
 import LoginForm from './components/LoginForm.jsx' // 5b (EI PAKOLLINEN TEHTÄVÄ)
 import BlogForm from './components/BlogForm.jsx' // 5b: extract blogForm to BlogForm component
 import loginService from "./services/login.js"
+import Togglable from "./components/Togglable.jsx"
 
 const App = () => {
   const [blogs, setBlogs] = useState(null) // HUOM! Tämä takia, huomaa rivin ~~19 "if(!blogs) {return null}" joka varmistaa, että App:in käynnistäessä ekalla kertaa palautetaan null, ja vasta kun blogs on haettu serveriltä (?), alkaa toimimaan; palautetaan null App:ista, kunnes serveriltä on saatu data. HUOM! "The method based on conditional rendering is suitable in cases where it is impossible to define the state so that the initial rendering is possible." Eli mitään oikeaa syytä initata blogs "null":iksi ei ole; paljon mieluummin inittaa []:ksi, jolloin tätä ongelmaa ei ole!! (ongelma: null:ille ei voi kutsua .map:iä. TAI, joutuisit joka kohdassa tarkistamaan ?.map jne... paskempi vaihtoehto)
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
-  const [newLikes, setNewLikes] = useState(0)
   const [newUrl, setNewUrl] = useState("")
   const [username, setUsername] = useState('') // 5a https://fullstackopen.com/en/part4/token_authentication#limiting-creating-new-notes-to-logged-in-users  
   const [password, setPassword] = useState('') // 5a
@@ -24,6 +24,7 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
+  
   
   useEffect(() => {    
     blogService.getAll()
@@ -186,7 +187,18 @@ const App = () => {
           <p>logged in as <i><b>{user.name}</b></i></p>
           { logoutButton() }
           {/** { blogForm() } */} {/** OLD. 5b extracted this to BlogForm */}
-          <BlogForm newTitle={newTitle}  newAuthor={newAuthor}  newUrl={newUrl} handleAuthorChange={handleAuthorChange} handleTitleChange={handleTitleChange} handleUrlChange={handleUrlChange} addBlog={addBlog}/>
+          <Togglable buttonLabel="create new blog">
+            <BlogForm 
+              newTitle={newTitle}  
+              newAuthor={newAuthor}  
+              newUrl={newUrl} 
+              handleAuthorChange={handleAuthorChange} 
+              handleTitleChange={handleTitleChange} 
+              handleUrlChange={handleUrlChange} 
+              addBlog={addBlog}
+            />
+          </Togglable>
+          
         </div> 
       }
 
