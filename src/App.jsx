@@ -94,7 +94,58 @@ const App = () => {
 //     </div>    
 //   )
 
+  const addBlog = (blogObject) => {  // 5b (5.6): this is given as a prop to BlogForm
+    //event.preventDefault()   // prevents the page from being refreshed on submit event     
+    //console.log('form onSubmit button clicked', event.currentTarget)  // event.target works too: "event.target will return the element that was clicked but not necessarily the element to which the event listener has been attached."
+    blogFormRef.current.toggleVisibility()  // 5b (5.5)
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        //setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      // TO-DO: korjaa!
+        setSuccessMessage(`a new blog KORJAA by KORJAA added!`)      
+        setTimeout(() => {        
+        setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
+      }, 5000)
+      })
+      .catch(error => { // added this
+        setErrorMessage("please provide values for 'title' AND 'url' for the new blog (author is optional)")
+        setTimeout(() => {        
+          setErrorMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
+        }, 5000) 
+      })
 
+    // pitäs olla tarpeeton
+    //   const blogObject = { // TO-DO: check what should be going on here!
+    //   title: newTitle,
+    //   author: newAuthor,
+    //   url: newUrl,
+    //   likes: 0,
+      
+    //   // id : blogs.length+1 // "it's better to let the server generate the new id"
+    // }
+
+    // entinen, josta copy-pastataan nyt
+    // blogService      
+    // .create(blogObject)      // this should also have
+    // .then(blog => {        
+    //   setBlogs(blogs.concat(blog))
+    //   setNewTitle('')
+    //   setNewAuthor('')
+    //   setNewUrl('')
+
+    //   setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      
+    //   setTimeout(() => {        
+    //     setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
+    //   }, 5000)
+    // })
+    // .catch(error => { // added this
+    //   setErrorMessage("please provide values for 'title' AND 'url' for the new blog (author is optional)")
+    //   setTimeout(() => {        
+    //     setErrorMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
+    //   }, 5000) 
+    // })
+  }
   
   const handleLogout = async (event) => {
     event.preventDefault()
@@ -124,6 +175,7 @@ const App = () => {
       }, 5000)    
     }
   }
+  
 
   let palautettavat_blogit = [...blogs]
     console.log("blogs:",palautettavat_blogit.length)
@@ -144,7 +196,7 @@ const App = () => {
           { logoutButton() }
           {/** { blogForm() } */} {/** OLD. 5b extracted this to BlogForm */}
           <Togglable buttonLabel="create new blog" ref={blogFormRef}> {/** REMEMBER! */}
-            <BlogForm blogs={blogs} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
+            <BlogForm createBlog={addBlog} /> {/** NB! You have to build it again nin BlogForm c: REMEMBER! */}
           </Togglable>
           
         </div> 
