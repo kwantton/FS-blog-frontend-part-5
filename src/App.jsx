@@ -23,6 +23,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const blogFormRef = useRef() // 5b, 5.5
+  const showMoreRef = useRef() // 5b, 5.7 getting the info from "show more / hide" button from Blog to LikeButton also
   
   
   useEffect(() => {    
@@ -59,7 +60,8 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
         //setSuccessMessage(`a new blog "${newTitle}" by "${newAuthor}" added!`)      // OLD! THIS DOESN'T WORK NOW, BECAUSE APP.JSX FUNCTION DOESN'T HAVE THIS! It DOES have to have the parameter, blogObject, that's fed into it in BlogForm component, however - so using that instead DOES work! Nice! REMEMBER!
         setSuccessMessage(`a new blog "${blogObject.title}" by "${blogObject.author}" added!`)      
-        blogFormRef.current.toggleVisibility()  // 5b (5.5) - only if successful, then hide it after adding a new blog c:
+
+        blogFormRef.current.toggleVisibility()  // 5b (5.5) !! - only if successful, then hide it after adding a new blog c:
         
         setTimeout(() => {        
         setSuccessMessage(null)  // = show the error message for 5 seconds, then set the error message to null again    
@@ -135,9 +137,14 @@ const App = () => {
           <ul>
           {palautettavat_blogit.map(blog => 
           <div>
-            <Blog key={blog.id} blog={blog}/>
-            <LikeButton blog={blog} prelikes={blog.likes}/>
+            <Blog key={blog.id} blog={blog} likes={blog.likes}/>   {/** 5b, 5.7 getting info about showing more info from Blog to LikeButton */}
+            {/* {showMoreRef.current.showMore() // this is a boolean; true, if the "show more" button has been pressed. Origin: Blog-component above c:
+              ? <LikeButton blog={blog} prelikes={blog.likes}/> 
+              : null
+            } */}
+            
             <DeleteButton blog={blog} blogs={blogs} user={user} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
+            
           </div>
           )}
         </ul>
