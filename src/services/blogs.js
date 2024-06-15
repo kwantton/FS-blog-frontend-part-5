@@ -8,12 +8,12 @@ const setToken = newToken => { // 5a
 }
 
 const getAll = () => {
-    return axios.get(baseUrl).
+  return axios.get(baseUrl).
     then(response => response.data) // returns a promise with JUST the data
-  }
+}
 
 const create = async newObject => {
-  const config = {    
+  const config = {
     headers: { Authorization: token },  // 5a
   }
 
@@ -31,7 +31,7 @@ const remove = async (id) => {
     headers: { Authorization: token },  // 5a own attempt
   }
   const response = await axios.delete(`${baseUrl}/${id}`, config) // 5a own attempt: will this work?? delete needs the url AND now also the token
-  console.log("blogService remove: response after axios.DELETE:", response)
+  console.log('blogService remove: response after axios.DELETE:', response)
   return response
 }
 

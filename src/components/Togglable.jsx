@@ -6,14 +6,14 @@ const Togglable = forwardRef( (props, refs) => { // 5b, 5.5 upgraded version
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
-  
+
   const toggleVisibility = () => {
     setVisible(!visible)
   }
 
   useImperativeHandle(refs, () => { // ref blogFormRef was fed here from the App.jsx. Using this, App.jsx can use toggleVisibility now c:
     return {
-        toggleVisibility
+      toggleVisibility
     }
   })
 
@@ -31,7 +31,7 @@ const Togglable = forwardRef( (props, refs) => { // 5b, 5.5 upgraded version
 })
 
 Togglable.propTypes = { // 5b, 5.12
-    buttonLabel: PropTypes.string.isRequired
+  buttonLabel: PropTypes.string.isRequired
 }
 
 Togglable.displayName = 'Togglable'
