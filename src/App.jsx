@@ -23,8 +23,6 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const blogFormRef = useRef() // 5b, 5.5
-  const showMoreRef = useRef() // 5b, 5.7 getting the info from "show more / hide" button from Blog to LikeButton also
-  
   
   useEffect(() => {    
     blogService.getAll()
@@ -107,7 +105,7 @@ const App = () => {
   }
   
 
-  let palautettavat_blogit = [...blogs]
+  let palautettavat_blogit = [...blogs].sort((a,b) => b.likes - a.likes) // 5.10
     console.log("blogs:",palautettavat_blogit.length)
     
     return (
@@ -138,11 +136,6 @@ const App = () => {
           {palautettavat_blogit.map(blog => 
           <div>
             <Blog key={blog.id} blog={blog} likes={blog.likes}/>   {/** 5b, 5.7 getting info about showing more info from Blog to LikeButton */}
-            {/* {showMoreRef.current.showMore() // this is a boolean; true, if the "show more" button has been pressed. Origin: Blog-component above c:
-              ? <LikeButton blog={blog} prelikes={blog.likes}/> 
-              : null
-            } */}
-            
             <DeleteButton blog={blog} blogs={blogs} user={user} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
             
           </div>

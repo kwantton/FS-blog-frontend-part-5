@@ -1,6 +1,6 @@
-import { useState } from "react"
+import PropTypes from 'prop-types'
 
-const loginForm = ( {username, password, handleLogin, setUsername, setPassword} ) => ( // 5a TO-DO: copy-pasted
+const LoginForm = ( {username, password, handleLogin, setUsername, setPassword} ) => ( // 5a TO-DO: copy-pasted
     <form onSubmit={handleLogin}>
       <div>
         username
@@ -24,4 +24,15 @@ const loginForm = ( {username, password, handleLogin, setUsername, setPassword} 
     </form>      
   )
 
-  export default loginForm
+
+  LoginForm.propTypes = {
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    handleLogin: PropTypes.func.isRequired,
+    setUsername: PropTypes.func.isRequired,
+    setPassword: PropTypes.func.isRequired
+  }
+
+  LoginForm.displayName = 'LoginForm'
+
+  export default LoginForm
