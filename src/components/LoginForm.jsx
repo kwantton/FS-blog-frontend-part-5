@@ -25,7 +25,7 @@ const LoginForm = ( { username, password, handleLogin, setUsername, setPassword 
 )
 
 
-LoginForm.propTypes = {
+LoginForm.propTypes = { // if you change these the other way around and "npm run dev" in the FRONT (not in the back!!! the "dist" in back comes from production build (npm run build) from the frontend, so after that you don't have a dev build any longer from the frontend - proptypes only works in dev build, not in production build!)
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   handleLogin: PropTypes.func.isRequired,
