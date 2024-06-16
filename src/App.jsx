@@ -135,7 +135,7 @@ const App = () => {
           <ul>
             {palautettavat_blogit.map(blog =>
               <div key={blog.id} > {/** thanks, chat GPT! */}
-                <Blog blog={blog} likes={blog.likes}/>   {/** 5b, 5.7 getting info about showing more info from Blog to LikeButton */}
+                <Blog blog={blog} prelikes={blog.likes}/>   {/** 5b, 5.7 getting info about showing more info from Blog to LikeButton */}
                 <DeleteButton blog={blog} blogs={blogs} user={user} setBlogs={setBlogs} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
               </div>
             )}

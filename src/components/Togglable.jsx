@@ -22,7 +22,7 @@ const Togglable = forwardRef( (props, refs) => { // 5b, 5.5 upgraded version
       <div style={hideWhenVisible}>
         <button onClick={toggleVisibility}>{props.buttonLabel}</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='togglableContent'> {/** 5c testing */}
         {props.children} {/** BlogForm is .children (at least that's One way that this Togglable is used in App.jsx atm c:) */}
         <button onClick={toggleVisibility}>hide</button>
       </div>
@@ -30,8 +30,8 @@ const Togglable = forwardRef( (props, refs) => { // 5b, 5.5 upgraded version
   )
 })
 
-Togglable.propTypes = { // 5b, 5.12
-  buttonLabel: PropTypes.string.isRequired
+Togglable.propTypes = { // 5b, 5.12. These errors will only be shown in the FRONTEND IN DEV BUILD; so don't do "npm run dist_handler" (front) + npm run dev (back): won't work! Only works with "npm run dev" in the front!
+  buttonLabel: PropTypes.func.isRequired
 }
 
 Togglable.displayName = 'Togglable'
