@@ -36,19 +36,17 @@ const BlogForm = ({ createBlog }) => {  // NB! the "createBlog" is a modified ve
     setNewUrl(event.currentTarget.value)
   }
 
-
-
   return (
     <form onSubmit={addBlog}>
 
       <p><i>title</i></p>
-      <input value={newTitle} onChange={handleTitleChange}/>
+      <input id='title' value={newTitle} onChange={handleTitleChange}/>
 
       <p><i>author</i></p>
-      <input value={newAuthor} onChange={handleAuthorChange}/>
+      <input id='author' value={newAuthor} onChange={handleAuthorChange}/>
 
       <p><i>url</i></p>
-      <input value={newUrl} onChange={handleUrlChange}/>
+      <input id='url' value={newUrl} onChange={handleUrlChange}/>
 
       <button type="submit">save</button>
 
