@@ -45,7 +45,7 @@ const Blog = ({blog, prelikes}) => {
         ? <>
           {', '}
           <a id='url' href={blog.url}>{blog.url}</a>
-          <LikeButton id='like-button' handleLikeButtonClick={handleLikeButtonClick} liked={liked} ogLikes={ogLikes} likes={likes}/>
+          <LikeButton id='like-button' handleLikeButtonClick={handleLikeButtonClick} liked={liked} likes={ogLikes}/>
         </>
         : null
       }

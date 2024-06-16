@@ -1,13 +1,6 @@
-import { useState } from 'react'
-import blogService from '../services/blogs'
-
-const LikeButton = ({ handleLikeButtonClick, ogLikes,liked }) => {
-  
-
-  
-
+const LikeButton = ({ handleLikeButtonClick, likes,liked }) => {
   return (
-    <button onClick = {handleLikeButtonClick}>{liked ? 'nah' : 'like'} {liked ? ogLikes +1 : ogLikes}👍</button>
+    <button onClick = {handleLikeButtonClick}>{liked ? 'nah' : 'like'} {liked ? likes +1 : likes}👍</button>
   )}
 
 export default LikeButton

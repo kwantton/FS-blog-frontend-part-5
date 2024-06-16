@@ -63,12 +63,15 @@ describe('<Blog />', () => {
       url:'test url',
       likes:0
     }
-
+    const user = userEvent.setup()
     const mockHandler = vi.fn()
-    const { container } = render(<LikeButton blog={blog} prelikes={blog.likes} handleLikeButtonClick={mockHandler}/>)
+    const { container } = render(<LikeButton blog={blog} likes={blog.likes} handleLikeButtonClick={mockHandler}/>)
 
     const likeButton = screen.queryByText('👍', {exact:false}) // this actually works, holy shit! It returns the whole thing!
 
+    await user.click(likeButton)
+    await user.click(likeButton) // twice
+    expect(mockHandler.mock.calls).toHaveLength(2)
 
     
   })
