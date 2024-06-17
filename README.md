@@ -1,6 +1,7 @@
 # Blog frontend (fullstack course part 5)
 
 FINISHED PART 5 FRONTEND. Note, the E2E testing section of part 5 is instead here: https://github.com/kwantton/FS-blog-E2E-part-5/tree/main
+So, now E2E testing is no longer here.
 
 OLDER:
 "SO - I git cloned this from https://github.com/kwantton/FS-blog-app-frontend, removed .git, and added .gitignore (have not made a new repo yet).
