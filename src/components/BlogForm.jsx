@@ -40,13 +40,13 @@ const BlogForm = ({ createBlog }) => {  // NB! the "createBlog" is a modified ve
     <form onSubmit={addBlog}>
 
       <p><i>title</i></p>
-      <input id='title' value={newTitle} onChange={handleTitleChange}/>
+      <input data-testid='title' id='title' value={newTitle} onChange={handleTitleChange}/>
 
       <p><i>author</i></p>
-      <input id='author' value={newAuthor} onChange={handleAuthorChange}/>
+      <input id='author' data-testid='author' value={newAuthor} onChange={handleAuthorChange}/>
 
       <p><i>url</i></p>
-      <input id='url' value={newUrl} onChange={handleUrlChange}/>
+      <input id='url' data-testid='url' value={newUrl} onChange={handleUrlChange}/>
 
       <button type="submit">save</button>
 
